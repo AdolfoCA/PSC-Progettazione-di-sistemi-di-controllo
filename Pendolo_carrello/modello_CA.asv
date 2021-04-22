@@ -52,34 +52,14 @@ Kd=20;
 contr_PID=tf([Kd Kp Ki],[1 0]);
 sys_cl_PID=feedback(pend,contr_PID);
 
-%% Studio in freq
-%riceve da tastiera i valore del controllore
-% nc=input('inserire il numeratore del controllore: ');
-% dc=input('inserire il denominatore del controllore: ');
-% k=input('inserire il guadagno del controllore: ');
-
-%BODE 
-contr_freq=k*tf(nc,dc);
-sys_cl_freq=pend*contr_freq;
-bode(sys_cl_freq);
-grid on
-
-%NYQUIST
-nyquist(sys_cl_freq)
-grid on
-
-%risp impulsiva
-sys_cl_freq=feedback(pend,contr_freq);
-
+%% 
 %% Confronto tra le risposte impulsive
 
-figure;
 impulse(sys_cl_rlc,t) %con root locus
 hold on
 impulse(sys_cl_PID,t) %con PID
-impulse(sys_cl_freq,t) %con sintesi in freq
 title('Risposta impulsiva');
-legend('retro PID','retro root locus','retro freq')
+legend('retro PID','retro root locus')
 grid on
 xlabel('time')
 ylabel('\theta (rad)')
