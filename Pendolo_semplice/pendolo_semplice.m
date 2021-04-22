@@ -10,7 +10,7 @@ d=1; %lunghezza asta [m], regolare il proporzionale in base all'asta
 x=theta*d; %posizione iniziale [m]
 v_x=0; %velocità iniziale [m/s]
 a_x=g*x/abs(d); %accelerazione iniziale [m/s^2]
-pos=[x d]; %coordinate x y del pendolo
+pos=[x d*cos(x/d)]; %coordinate x y del pendolo
 h=0.025; %passo
 kp=15;  %proporzionale 
 ki=1; %integrativa
@@ -20,7 +20,7 @@ rif=0; %posizione desiderata
 
 
 for t=0:h:300
-   pos=[x d]; %aggiorno posizione
+   pos=[x d*cos(x/d)]; %aggiorno posizione
    
    plot([0 pos(1,1)], [0 pos(1,2)],'r-') %plot
    xlim([-2*abs(d) 2*abs(d)]); %utili al plot
