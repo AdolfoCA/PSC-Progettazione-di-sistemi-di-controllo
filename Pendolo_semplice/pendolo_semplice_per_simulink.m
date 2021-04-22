@@ -29,7 +29,7 @@ p2=60; %polo lontano
 
 numc=conv([1 z2],[1 z1]);
 denc=conv([1 p2],[1 p1]);
-contr1=tf(num1,den1);
+contr1=tf(numc,denc);
 rlocus(contr1*pend)
 
 [k,poles]=rlocfind(contr1*pend);
