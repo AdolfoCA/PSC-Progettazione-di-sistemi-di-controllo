@@ -15,19 +15,24 @@ pend=tf(num,den);
 
 t=[0:0.001:3];
 impulse(pend,t)
-rlocus(pend)
+title('Risposta impulsiva catena aperta')
+grid on
 
 %% LUOGO RADICI
 %plot luogo radici open loop
+figure
 rlocus(pend)
+title('Luogo radici catena aperta')
 sigrid(0.92)
 axis([-6 6 -6 6])
 
 %rete correttrice per luogo radici
 contr_PID=tf(1,[1 0]);
+figure
 rlocus(contr_PID*pend);
 sigrid(0.92)
 axis([-10 10 -10 10])
+title('Luogo radici compensazione 1')
 
 %aggiunta di poli e zeri
 z1=3; z2=4; 
@@ -38,11 +43,13 @@ p2=60; %polo lontano
 numc=conv([1 z2],[1 z1]);
 denc=conv([1 p2],[1 p1]);
 contr_rlc=tf(numc,denc);
+figure
 rlocus(contr_rlc*pend)
+title('Luogo radici compensazione 2')
 
 %prelevo gain per la rete correttrice
-[k,poles]=rlocfind(contr_rlc*pend); %scelgie graficamente gain e poli corrispondenti
-sys_cl_rlc=feedback(pend,contr_rlc*k);
+[k_freq,poles]=rlocfind(contr_rlc*pend); %scelgie graficamente gain e poli corrispondenti
+sys_cl_rlc=feedback(pend,contr_rlc*k_freq);
 
 
 %% PID
@@ -56,15 +63,21 @@ sys_cl_PID=feedback(pend,contr_PID);
 %riceve da tastiera i valore del controllore
 % nc=input('inserire il numeratore del controllore: ');
 % dc=input('inserire il denominatore del controllore: ');
-% k=input('inserire il guadagno del controllore: ');
+% k_freq=input('inserire il guadagno del controllore: ');
+
+nc=[20 140 200];
+dc=[0.001 1 0];
+k_freq=20;
 
 %BODE 
-contr_freq=k*tf(nc,dc);
+figure
+contr_freq=k_freq*tf(nc,dc);
 sys_cl_freq=pend*contr_freq;
 bode(sys_cl_freq);
 grid on
 
 %NYQUIST
+figure
 nyquist(sys_cl_freq)
 grid on
 
@@ -73,7 +86,7 @@ sys_cl_freq=feedback(pend,contr_freq);
 
 %% Confronto tra le risposte impulsive
 
-figure;
+figure
 impulse(sys_cl_rlc,t) %con root locus
 hold on
 impulse(sys_cl_PID,t) %con PID
