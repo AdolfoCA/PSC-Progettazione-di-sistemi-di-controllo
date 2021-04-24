@@ -4,10 +4,13 @@ from uiflow import *
 import imu
 from servo import Servo
 from datetime import datetime
+import time
+
 
 setScreenColor(0x111111)
 
 imu0 = imu.IMU()    
+servo0 = Servo(26,50,500,2500,180)
 
 theta0 = 0  #valore asintotico voluto
 # coefficenti PID calcolati
@@ -43,6 +46,7 @@ while True:
     thetaIN = imu0.gyro[0]
     outPWM = calcola_PID(thetaIN)
     # delay 100 ms
+    wait_ms(100)
     servo0.write_angle(outPWM)
     
     
