@@ -13,7 +13,9 @@ num=[m*l/q 0];
 den=[1 b*(i+m*l^2)/q -(M+m)*m*g*l/q -b*m*g*l/q];
 pend=tf(num,den);
 
+
 t=[0:0.001:3];
+
 impulse(pend,t)
 title('Risposta impulsiva catena aperta')
 grid on
