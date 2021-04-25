@@ -7,6 +7,12 @@ l=0.3;  %lunghezza pendolo
 i=0.006; %inerzia pendolo
 g=9.8;
 
+%condizione iniziale 
+p0 = 0;
+theta0 = rand();
+w0 = rand();
+velocita0 = 0;
+
 %modello come fdt
 q=(M+m)*(i+m*l^2)-(m*l)^2;
 num=[m*l/q 0];
