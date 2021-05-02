@@ -41,7 +41,7 @@ def calcola_PID(ingresso):
     
     
     
-    
+# main loop
 while True:
     thetaIN = imu0.gyro[0]
     outPWM = calcola_PID(thetaIN)

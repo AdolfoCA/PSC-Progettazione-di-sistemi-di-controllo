@@ -1,11 +1,11 @@
 %% modello in SS
 %grandezze fisiche
-M=0.5; %massa carrello
-m=0.2;  %massa pendolo
+M=40e-3; %massa carrello
+m=60e-3;  %massa pendolo
 b=0.1;  %attrito carrello-pavimento
-l=0.3;  %lunghezza pendolo
-i=0.006; %inerzia pendolo
-g=9.8;
+l=71e-3;  %lunghezza pendolo punta-asse orizzontale
+i=m*l^2; %inerzia pendolo
+g=9.81;
 
 %condizione iniziale 
 p0 = 0;
@@ -20,7 +20,7 @@ den=[1 b*(i+m*l^2)/q -(M+m)*m*g*l/q -b*m*g*l/q];
 pend=tf(num,den);
 
 
-t=[0:0.001:3];
+t=[0:0.001:5];
 
 impulse(pend,t)
 title('Risposta impulsiva catena aperta')
@@ -35,9 +35,9 @@ sigrid(0.92)
 axis([-6 6 -6 6])
 
 %rete correttrice per luogo radici
-contr_PID=tf(1,[1 0]);
+contr_rlc1=tf(1,[1 0]);
 figure
-rlocus(contr_PID*pend);
+rlocus(contr_rlc1*pend);
 sigrid(0.92)
 axis([-10 10 -10 10])
 title('Luogo radici compensazione 1')
@@ -61,11 +61,11 @@ sys_cl_rlc=feedback(pend,contr_rlc*k_freq);
 
 
 %% PID
-Ki=1;
-Kp=100;
-Kd=20;
+Ki=177.3;
+Kp=27.59;
+Kd=1.073;
 contr_PID=tf([Kd Kp Ki],[1 0]);
-sys_cl_PID=feedback(pend,contr_PID);
+sys_cl_PID=feedback(pend*contr_PID,1);
 
 %% Studio in freq
 %riceve da tastiera i valore del controllore
@@ -100,7 +100,7 @@ hold on
 impulse(sys_cl_PID,t) %con PID
 impulse(sys_cl_freq,t) %con sintesi in freq
 title('Risposta impulsiva');
-legend('retro PID','retro root locus','retro freq')
+legend('retro root locus','retro PID','retro freq')
 grid on
 xlabel('time')
 ylabel('\theta (rad)')
