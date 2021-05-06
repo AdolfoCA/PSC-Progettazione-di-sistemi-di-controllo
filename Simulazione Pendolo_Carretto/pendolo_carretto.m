@@ -1,4 +1,3 @@
-
 clc
 clear all
 close all
@@ -29,7 +28,7 @@ I=0.006; %momento d'inerzia pendolo [Kgm^2]
 F=0; %forzamento impresso al carrello per controllare il pendolo [N]
 l=true;
 
-for t=0:h:300
+for t=0:h:50
 %    pos_p=[xp d*cos(xp/d)]; %aggiorno posizione pendolo rispetto al carretto
 %    figure(1) %plot che vede l'asta dal punto di vista del carretto
 %    plot([0 pos_p(1,1)], [0 pos_p(1,2)],'r-') %plot pendolo
@@ -52,7 +51,7 @@ for t=0:h:300
    dervt=(e-p_e)/h; %predizione
    p_e=e; %aggiorno errore precedente
    
-   F=-kp*e+ki*intgr-kd*dervt;  %forzamento
+   F=(kp*e+ki*intgr+kd*dervt)*(-1);  %forzamento
    
    
    %VEDI MODELLO MATEMATICO PER CHIARIMENTI
@@ -66,16 +65,16 @@ for t=0:h:300
    xc=xc+v_xc*h; %posizione del carretto   
    xp=xp+v_xp*h; %posizione del pendolo 
    
-   if abs(v_xp)<= 0.5 && abs(e)<=0.5 %resetto memoria NB:diminuire i parametri se si spegne il derivatore
-       intgr=0; %serve per impedire che il pendolo cada
-   end
+%    if abs(v_xp)<= 0.5 && abs(e)<=0.5 %resetto memoria NB:diminuire i parametri se si spegne il derivatore
+%        intgr=0; %serve per impedire che il pendolo cada
+%    end
    
    if mod(t,4)==0 %introduco in disturbo randomico
        if l==true  
-            v_xp=v_xp+rand()/25;
+            v_xp=v_xp+rand()/15;
             l=false;
        else
-            v_xp=v_xp-rand()/25;
+            v_xp=v_xp-rand()/15;
             l=true;
        end  
        print="Introduco un disturbo..."
