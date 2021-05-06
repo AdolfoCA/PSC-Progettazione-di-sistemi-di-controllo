@@ -9,8 +9,8 @@ g=9.8;
 
 %condizione iniziale 
 p0 = 0;
-theta0 = rand();
-w0 = rand();
+theta0 = 1.5;
+w0 = 2;
 velocita0 = 0;
 
 %modello come fdt
@@ -34,5 +34,6 @@ contr_PID=tf([Kd Kp Ki],[1 0]);
 sys_cl_PID=feedback(pend,contr_PID);
 figure(2)
 impulse(sys_cl_PID,t)
+axis([0 5 -2 2])
 title('Risposta impulsiva controllo PID')
 grid on
