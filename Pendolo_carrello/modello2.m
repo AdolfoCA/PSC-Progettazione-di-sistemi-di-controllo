@@ -11,7 +11,7 @@ f=-M*m*l^2+I*(M+m);
 %sistema senza distrurbi o rumori
 A=[0 1 0 0; 0 0 l^2*m^2*g/f 0; 0 0 0 1; 0 0 -l*M*g/f 0];
 B=[0 (I-l^2*m)/f 0 l*m/f]';
-C=[1 0 1 0]; % solo theta osservabile
+C=[1 0 1 0]; % NOTA: Kalman vuole sia theta che la posiione (che però è non osservabile tramite sensori)
 D=0;
 
 Vn=1;
