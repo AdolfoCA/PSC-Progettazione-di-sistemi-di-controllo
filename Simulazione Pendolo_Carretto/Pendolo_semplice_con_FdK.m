@@ -69,4 +69,4 @@ legend('\theta reale','\omega reale','\theta stimato','\omega stimato')
 
 
 % discretizzo il sistema con rumore sysD
-discretizzato=c2d(sysD, 0.1, 'zoh');
+discretizzato=c2d(sysD, 0.001, 'zoh');
