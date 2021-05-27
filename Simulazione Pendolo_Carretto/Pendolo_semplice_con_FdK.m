@@ -17,7 +17,7 @@ O=obsv(A,C);
 r_O=rank(O); %OSS
 
 Vd=0.1*eye(2); %matrice cov disturbo processo
-Vn=1; %matrice cov rumore misurazione
+Vn=0.1; %matrice cov rumore misurazione
 
 Bd=[B Vd zeros(2,1)];
 Dd=[0 0 0 1];
@@ -66,3 +66,7 @@ plot(t,yE)
 hold off
 title('Comparazione tra stima del KF e stato reale')
 legend('\theta reale','\omega reale','\theta stimato','\omega stimato')
+
+
+% discretizzo il sistema con rumore sysD
+discretizzato=c2d(sysD, 0.1, 'zoh');
