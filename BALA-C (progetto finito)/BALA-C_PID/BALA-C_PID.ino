@@ -9,7 +9,7 @@ float err = 0.0F;
 float pre_err = 0.0F;
 float sum_err = 0.0F;
 float proporzionale = 0.0F;
-float integrativo = 0.0F;
+float integrale = 0.0F;
 float derivativo = 0.0F;
 float P = 3.5F;
 float I = 0.025F;
@@ -43,9 +43,9 @@ void loop() {
   if(err > 0.1 or err < -0.1){
     sum_err = sum_err + err * dt;
     proporzionale = P * err;
-    integrativo = I * sum_err ;
+    integrale = I * sum_err ;
     derivativo = D * ((err - pre_err)/dt);
-    PID = proporzionale + integrativo + derivativo;
+    PID = proporzionale + integrale + derivativo;
     BugC.BugCSetAllSpeed(-PID, PID, 0, 0);
     pre_err = err;
   }
