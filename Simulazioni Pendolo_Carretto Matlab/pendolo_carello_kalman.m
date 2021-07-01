@@ -1,5 +1,5 @@
-clc
 clear all
+clc
 close all
 
 
@@ -34,29 +34,40 @@ D = 1;
 Q = 0.1;
 R = 0.0288;
 K = 0;
-theta_pre = 0;
 P_1 = 0;
 P = 0;
 P_pre = 0;
+xs = 0; %posizione del pendolo stimata dal FdK
+xs_pre = 0;
 for t=0:h:50
-%    pos_p=[xp d*cos(xp/d)]; %aggiorno posizione pendolo rispetto al carretto
-%    figure(1) %plot che vede l'asta dal punto di vista del carretto
-%    plot([0 pos_p(1,1)], [0 pos_p(1,2)],'r-') %plot pendolo
-%    xlim([-2*abs(d) 2*abs(d)]); %utili al plot
-%    ylim([-2*abs(d) 2*abs(d)]); %utili al plot
-%    title("Pendolo visto dal carretto");
   
+   %VISUALIZZAZIONE GRAFICA DEL PENDOLO CON CARRETTO
    figure(2) %plot che vede il carretto dal punto di vista di un osservatore esterno
-   plot(xc,0,'sb','MarkerSize',40) %plot carretto
+   plot(xc,0,'sb','MarkerSize',50) %plot carretto
    hold on
    plot([xc xc+xp],[0 d*cos(xp/d)],'r-'); %plot pendolo
    hold off
    title("Carretto con pendolo visto dall'esterno");
-   xlim([-2*d 2*d]); %NB: i disturbi possono portare il carretto ad uscire dai limiti del plot
+   xlim([-2*d 2*d]); 
    ylim([-2*d 2*d]);
-   drawnow %utili al plot
+   drawnow 
    
-   e=rif-xp; %calcolo errore posizione del pendolo rispetto al CM del carretto
+   %SIMULAZIONE DI SENSORE RUMOROSO
+   y = xp;
+   w = (-1 + 2*rand())/100;
+   y = y + w;
+
+   
+   %IMPLEMENTAZIONE DELLE EQUAZIONI DEL FILTRO DI KALMAN
+   P_1=A*P_pre*A + B*Q*B;
+   K = P_1*C/(C*P_1*C + D*R*D); 
+   xs = A*xs_pre + K*(y-C*A*xs_pre) ;
+   P = (1 - K)*P_1;
+   
+   P_pre = P;
+   xs_pre = xs;
+			
+   e=rif-xs; %calcolo errore posizione del pendolo rispetto al CM del carretto
    intgr=intgr+e*h; %memorizzazione
    dervt=(e-p_e)/h; %predizione
    p_e=e; %aggiorno errore precedente
@@ -65,20 +76,8 @@ for t=0:h:50
    
    
    %VEDI MODELLO MATEMATICO PER CHIARIMENTI
-   
-   %SIMULAZIONE DI SENSORE RUMOROSO
-   y=xp/d;
-   w = (-1 + 2*rand())/100;
-   y = y + w;
-   
-   %IMPLEMENTAZIONE DELLE EQUAZIONI DEL FILTRO DI KALMAN
-   P_1=A*P_pre*A + B*Q*B;
-   K = P_1*C/(C*P_1*C + D*R*D); 
-   theta = A*theta_pre + K*(y-C*A*theta_pre) ;
-   P = (1 - K)*P_1;
-   
-   P_pre = P;
-   theta_pre = theta;
+
+   theta=xp/d;
    
    a_xc= (g*theta*d^2*m^2 + F*d^2*m + F*I)/(M*m*d^2 + M*I + m*I); %accelerazione del carretto
    a_xp= d*-(d*m*(M*g*theta - F + g*m*theta))/(- M*m*d^2 + M*I + m*I) - a_xc; %accelerazione del pendolo
@@ -95,10 +94,10 @@ for t=0:h:50
    
    if mod(t,4)==0 %introduco in disturbo randomico
        if l==true  
-            v_xp=v_xp+rand()/15;
+            v_xp=v_xp+rand()/25;
             l=false;
        else
-            v_xp=v_xp-rand()/15;
+            v_xp=v_xp-rand()/25;
             l=true;
        end  
        print="Introduco un disturbo..."
