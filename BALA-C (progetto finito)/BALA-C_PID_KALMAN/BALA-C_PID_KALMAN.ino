@@ -73,7 +73,7 @@ void loop() {
   err= rif - x;
   act_time = millis();
   dt = act_time  - pre_time;
-  if(err > 0.08 or err < -0.08){
+  if(err > 0.1 or err < -0.1){
     sum_err = sum_err + err * dt;
     proporzionale = P_gain * err;
     integrale = I_gain * sum_err ;
