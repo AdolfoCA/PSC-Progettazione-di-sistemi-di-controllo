@@ -4,14 +4,14 @@
 float roll = 0.0F; //rick
 float v1 = 0.0F; 
 float v2 = 0.0F; 
-float rif = -101.0F;
+float rif = -100.0F;
 float err = 0.0F;
 float pre_err = 0.0F;
 float sum_err = 0.0F;
 float proporzionale = 0.0F;
 float integrale = 0.0F;
 float derivativo = 0.0F;
-float P = 3.5F;
+float P = 4.0F;
 float I = 0.025F;
 float D = 1.5F;
 float PID = 0.0F;
