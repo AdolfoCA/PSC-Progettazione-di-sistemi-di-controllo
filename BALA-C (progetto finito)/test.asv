@@ -40,17 +40,18 @@ rank(O);
 K=place(A,B,[-15 -15.1 -15.2 -15.3]);
 
 
-%% Consideriamo il sistema soggetto ad un WN sulla misura dell'angolo
+%% Consideriamo il sistema soggetto ad un WN sulla misura
 Ts = 0.1;
 t = 0:Ts:2;
 
-v = wgn(length(t),1,0.1);
+w = wgn(length(t),1,0.001);
+v = wgn(length(t),2,0.001);
 
+Q = cov(w);
 R = cov(v);
 
-% Per il principio di sovrapposizione degli effetti separo i due
-% problemi, quello di controllo tramite retroazione e quello della stima.
-% Posso andare a stimare direttamente lo stato del sistema retroazionato
+% Per il principio di sovrapposizione degli effetti posso separare i due
+% problemi, quello di controllo tramite retroazione e quello della stima
 
 % Sistema con retroazione dallo stato
 sys = ss(A-B*K,zeros(4,1),C,D);
@@ -59,13 +60,13 @@ sys.OutputName = {'yt1','yt2'};
 x0 = [0 0 0.1 0]';
 figure(1)
 y=initial(sys,x0,t);
-plot(t,y(:,2)+v,'LineWidth',2)
+plot(t,y(:,2)+v(:,2),'LineWidth',2)
 grid
 legend('\theta misurato')
 title('Angolo misurato')
 
 % Costruisco il filtro di Kalman
-[kalmf,L,~,Mx,Z] = kalman(sys,0,R);
+[kalmf,L,~,Mx,Z] = kalman(sys,Q,R);
 kalmf = kalmf(1:2,:);
 kalmf.InputName = {'y1','y2'};
 kalmf.OutputName = {'ye1','ye2'};
@@ -80,22 +81,26 @@ title('Angolo stimato')
 
 % Confronto tra la misura e la stima
 figure(3)
-plot(t,y(:,2)+v,'LineWidth',1)
+plot(t,y(:,2)+v(:,2),'LineWidth',1)
 hold on
 plot(t,yk(:,2),'LineWidth',2)
 grid
 legend('\theta misurato','\theta stimato')
-title('Confronto tra misura e stima')
-
-% Confronto tra il valore realre e la stima
-figure(4)
-plot(t,y(:,2),'LineWidth',1)
-hold on
-plot(t,yk(:,2),'LineWidth',1)
-grid
-legend('\theta reale','\theta stimato')
-title('Confronto tra valore reale e stima')
-
-
-
-
+title('Angolo misurato','Angolo stimato')
+% % Evoluzione libera catena chiusa
+% x0=[0;0;0.1;0;0.2;0.1;0.3;0.06];
+% out=initial(SimModel,x0,t);
+% figure(2)
+% plot(t,out(:,2),'LineWidth',1)
+% hold on
+% plot(t,out(:,4),'LineWidth',1)
+% grid
+% hold off
+% legend('\theta effettivo', '\theta stimato')
+% title('Angolo effettivo e angolo stimato')
+% 
+% figure(3)
+% err = (out(:,2)-out(:,4)).^2;
+% plot(t,err,'LineWidth',3)
+% grid
+% title('Errore di stima su \theta');
